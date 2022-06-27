@@ -15,6 +15,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -108,8 +109,11 @@ class CompanyProductMappingTest {
         });
 
         emUtil.performWithinTx(entityManager -> {
+
             var managedCompany = entityManager.find(Company.class, company.getId());
             var managedProduct = entityManager.find(Product.class, product.getId());
+
+            System.out.println(managedCompany.getProducts() + " - " + managedProduct);
 
             assertThat(managedCompany.getProducts()).contains(managedProduct);
             assertThat(managedProduct.getCompany()).isEqualTo(managedCompany);
@@ -217,6 +221,8 @@ class CompanyProductMappingTest {
         });
 
         Company foundCompany = companyDao.findByIdFetchProducts(company.getId());
+        System.out.println(company.getProducts() + " ------------------------------------------");
+        System.out.println(foundCompany.getProducts() + " ------------------------------------------");
         assertThat(foundCompany).isEqualTo(company);
         assertThat(foundCompany.getProducts()).contains(product);
     }
