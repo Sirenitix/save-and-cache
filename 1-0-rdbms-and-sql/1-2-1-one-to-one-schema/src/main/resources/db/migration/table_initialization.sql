@@ -9,7 +9,7 @@ A profile for each user is optional, and consists of optional information: city,
 All these fields are regular strings without restrictions.
 
   TECH NOTES AND NAMING CONVENTION
-- All tables, columns and constraints are named using "snake case" naming convention
+    - All tables, columns and constraints are named using "snake case" naming convention
 - All table names must be plural (e.g. "companies", not "company")
 - All tables (except link tables) should have a single-value identifier of type BIGINT, which is a primary key
 - All primary key, foreign key, and unique constraint should be named according to the naming convention.
@@ -23,3 +23,24 @@ should have a column that stores primary key from a parent table, which is a for
 */
 
 -- TODO: implement the SQL according to the description
+CREATE TABLE users (
+                       id BIGINT not null ,
+                       first_name varchar(255) not null ,
+                       last_name varchar(255) not null ,
+                       email varchar(255) not null ,
+                       birthday date not null,
+                       CONSTRAINT users_email_AK UNIQUE (email),
+                       CONSTRAINT users_PK PRIMARY KEY (id)
+);
+
+CREATE TABLE profiles (
+                        city varchar(255),
+                        job_position varchar(255),
+                        company varchar(255),
+                        education varchar(255),
+                        user_id BIGINT  ,
+                        CONSTRAINT profiles_users_FK FOREIGN KEY(user_id) REFERENCES users(id),
+                        CONSTRAINT profiles_PK PRIMARY KEY (user_id)
+);
+
+
