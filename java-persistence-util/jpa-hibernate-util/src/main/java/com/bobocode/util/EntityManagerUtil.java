@@ -1,7 +1,11 @@
 package com.bobocode.util;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -18,6 +22,8 @@ public class EntityManagerUtil {
         try {
             entityManagerConsumer.accept(entityManager);
             entityManager.getTransaction().commit();
+        } catch (PersistenceException persistenceException){
+            throw new RollbackException();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
             throw e;
