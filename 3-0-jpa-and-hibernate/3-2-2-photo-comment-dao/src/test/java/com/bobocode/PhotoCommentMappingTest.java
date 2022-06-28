@@ -161,6 +161,7 @@ public class PhotoCommentMappingTest {
 
         PhotoComment photoComment = createRandomPhotoComment();
         photoComment.setPhoto(photo);
+        System.out.println(photo.getId() + " " + photo.getComments() + " " + photo.getDescription() + " " + photo.getUrl() + " -------------------------------------------");
         emUtil.performWithinTx(entityManager -> entityManager.persist(photoComment));
 
         assertThat(photoComment.getId()).isNotNull();

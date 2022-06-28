@@ -23,6 +23,7 @@ public class EntityManagerUtil {
             entityManagerConsumer.accept(entityManager);
             entityManager.getTransaction().commit();
         } catch (PersistenceException persistenceException){
+            System.out.println(persistenceException.getMessage() + "_____________________________________________");
             throw new RollbackException();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();

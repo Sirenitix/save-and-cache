@@ -4,7 +4,11 @@ import com.bobocode.util.ExerciseNotCompletedException;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.SimpleTimeZone;
 
 /**
  * todo:
@@ -24,17 +28,47 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Entity
+@Table(name = "photo")
 public class Photo {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(unique = true, nullable = false)
     private String url;
+
     private String description;
-    private List<PhotoComment> comments;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "photo", orphanRemoval = true)
+    private List<PhotoComment> comments= new ArrayList<>();
+
+    private void setComments(List<PhotoComment> comments) {
+        this.comments = comments;
+    }
 
     public void addComment(PhotoComment comment) {
-        throw new ExerciseNotCompletedException();
+        comment.setPhoto(this);
+        comments.add(comment);
     }
 
     public void removeComment(PhotoComment comment) {
-        throw new ExerciseNotCompletedException();
+        comment.setPhoto(null);
+        comments.remove(comment);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Photo photo = (Photo) o;
+        return Objects.equals(id, photo.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 }
